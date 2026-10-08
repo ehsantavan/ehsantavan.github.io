@@ -4,21 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ehsan Tavan</title>
-<meta name="description" content="Ehsan Tavan, PhD researcher in AI at the University of Pisa and the ATLAS Lab, working on continual learning, adaptive AI agents and efficient LLM adaptation.">
+<meta name="description" content="Ehsan Tavan, PhD researcher in AI at the University of Pisa and the ATLAS Lab, working on personalized AI agents that learn from each user's history, continual learning and efficient LLM adaptation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #fbfaff;
     --surface: #ffffff;
+    --surface-2: #f4f2fc;
     --ink: #1d1b3a;
     --muted: #5d5a7a;
     --line: #e7e4f4;
     --violet: #6c4cf1;
-    --teal: #0aa39c;
-    --pink: #f0457f;
-    --amber: #f5a524;
+    --teal: #0a9d96;
+    --pink: #e93d7a;
+    --amber: #f0a020;
     --sky: #2f8cf0;
     --display: "Bricolage Grotesque", system-ui, sans-serif;
     --body: "Figtree", system-ui, sans-serif;
@@ -27,9 +28,10 @@
   :root[data-theme="dark"] {
     --bg: #14122a;
     --surface: #1d1a3a;
+    --surface-2: #26224a;
     --ink: #f1effc;
     --muted: #aaa6c9;
-    --line: #2f2b55;
+    --line: #322d5a;
     --violet: #9b84ff;
     --teal: #3fd3c9;
     --pink: #ff76a6;
@@ -42,16 +44,14 @@
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--body);
-    font-size: 1.0625rem;
-    line-height: 1.65;
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 1.0625rem; line-height: 1.65;
     transition: background-color .3s, color .3s;
   }
   a { color: var(--violet); text-underline-offset: 3px; }
-  :focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 6px; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 8px; }
+  .wrap { max-width: 72rem; margin: 0 auto; padding: 0 1rem; }
 
   /* Navigation */
   nav {
@@ -60,10 +60,7 @@
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
   }
-  .nav-inner {
-    max-width: 68rem; margin: 0 auto; padding: .7rem 1rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
+  .nav-inner { display: flex; align-items: center; gap: 1rem; padding-top: .7rem; padding-bottom: .7rem; }
   .brand { font-family: var(--display); font-weight: 800; font-size: 1.15rem; color: var(--ink); text-decoration: none; margin-right: auto; }
   .nav-links { display: flex; gap: .25rem; list-style: none; margin: 0; padding: 0; }
   .nav-links a {
@@ -73,114 +70,160 @@
   }
   .nav-links a:hover { color: var(--ink); background: var(--line); }
   .nav-links a.active { color: #fff; background: var(--violet); }
-  .theme-btn {
-    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
-    width: 2.25rem; height: 2.25rem; border-radius: 50%; cursor: pointer; font-size: 1rem;
-    display: grid; place-items: center;
+  .icon-btn {
+    border: 1px solid var(--line); background: var(--surface); cursor: pointer;
+    width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center;
   }
   @media (max-width: 640px) { .nav-links { display: none; } }
 
   /* Hero */
-  .hero { position: relative; overflow: hidden; min-height: 34rem; display: flex; align-items: center; }
-  #field { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
-  .hero-inner {
-    position: relative; z-index: 1; pointer-events: none;
-    max-width: 68rem; width: 100%; margin: 0 auto; padding: 4rem 1rem 5rem;
+  .hero { position: relative; overflow: hidden; overflow: clip; isolation: isolate; }
+  .hero::before, .hero::after {
+    content: ""; position: absolute; border-radius: 50%; filter: blur(70px); z-index: -1;
   }
-  .hero-card {
-    pointer-events: auto;
-    max-width: 36rem;
-    background: color-mix(in srgb, var(--surface) 78%, transparent);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    border: 1px solid var(--line);
-    border-radius: 28px; padding: 2rem 2rem 1.75rem;
-    box-shadow: 0 20px 60px -24px color-mix(in srgb, var(--violet) 45%, transparent);
+  .hero::before { width: 32rem; height: 32rem; left: -10rem; top: -12rem; background: var(--violet); opacity: .3; }
+  .hero::after { width: 26rem; height: 26rem; right: -8rem; top: 8rem; background: var(--pink); opacity: .2; }
+  .hero-grid {
+    display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr); gap: 3rem; align-items: center;
+    padding-top: 3.5rem; padding-bottom: 4rem;
   }
+  @media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; gap: 2rem; padding-top: 2.5rem; } }
   h1 {
     font-family: var(--display); font-weight: 800;
-    font-size: clamp(2.6rem, 7vw, 4.2rem); line-height: 1; letter-spacing: -0.03em;
-    margin: 0 0 1rem;
-    background: linear-gradient(100deg, var(--violet), var(--pink) 45%, var(--amber));
+    font-size: clamp(2.8rem, 6.5vw, 4.4rem); line-height: .98; letter-spacing: -0.035em;
+    margin: 0 0 1.1rem;
+    background: linear-gradient(100deg, var(--violet), var(--pink) 50%, var(--amber));
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .role { font-weight: 600; margin: 0 0 1rem; line-height: 1.45; }
-  .role span { color: var(--muted); font-weight: 500; display: block; }
-  .lede { margin: 0 0 1.5rem; color: var(--muted); }
+  .role { font-weight: 700; margin: 0 0 1rem; line-height: 1.45; }
+  .role span { display: block; color: var(--muted); font-weight: 500; }
+  .lede { font-size: 1.15rem; margin: 0 0 1.6rem; max-width: 34rem; }
   .buttons { display: flex; flex-wrap: wrap; gap: .6rem; }
   .btn {
     display: inline-flex; align-items: center; gap: .5rem;
-    padding: .6rem 1.1rem; border-radius: 999px; font-weight: 600; font-size: .95rem;
-    text-decoration: none; transition: transform .15s, box-shadow .15s;
+    padding: .62rem 1.1rem; border-radius: 999px; font-weight: 600; font-size: .95rem;
+    text-decoration: none; transition: transform .15s;
   }
   .btn:hover { transform: translateY(-2px); }
-  .btn-main { background: var(--violet); color: #fff; box-shadow: 0 8px 20px -8px var(--violet); }
+  .btn-main { background: var(--violet); color: #fff; box-shadow: 0 10px 24px -10px var(--violet); }
   .btn-alt { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
   .btn svg { width: 1.05rem; height: 1.05rem; }
-  @media (max-width: 1100px) {
-    .hero-inner { padding-top: 12.5rem; padding-bottom: 7.5rem; }
-    .hero-card { padding: 1.5rem 1.35rem; }
+
+  /* Demo: one agent, two histories */
+  .demo {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 28px;
+    padding: 1.25rem; box-shadow: 0 30px 70px -36px color-mix(in srgb, var(--violet) 55%, transparent);
   }
-  .hint {
-    position: absolute; z-index: 1; right: 1rem; bottom: 1rem; max-width: 19rem;
-    font-size: .85rem; line-height: 1.4; color: var(--muted);
-    background: color-mix(in srgb, var(--surface) 88%, transparent);
-    border: 1px solid var(--line); border-radius: 16px; padding: .6rem .9rem;
-    pointer-events: none;
+  .demo-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; margin: 0 .25rem .9rem; }
+  .demo-head h2 { font-family: var(--display); font-weight: 700; font-size: 1.3rem; margin: 0; letter-spacing: -0.01em; }
+  .demo-head p { margin: 0; font-size: .9rem; color: var(--muted); }
+  .questions { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; padding: 0; list-style: none; }
+  .q {
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--muted);
+    padding: .35rem .8rem; border-radius: 999px; cursor: pointer; font-size: .88rem; font-weight: 600;
+    transition: background-color .2s, color .2s, border-color .2s;
   }
-  .hint p { margin: 0; }
-  .hint-title { display: flex; align-items: center; gap: .5rem; font-family: var(--display); font-weight: 700; color: var(--ink); font-size: .95rem; margin-bottom: .15rem !important; }
-  .hint b { color: var(--ink); }
-  .dots { display: inline-flex; gap: 3px; }
-  .dots i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+  .q:hover { color: var(--ink); }
+  .q[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .users { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+  @media (max-width: 560px) { .users { grid-template-columns: 1fr; } }
+  .user {
+    --c: var(--teal);
+    border-radius: 20px; padding: .9rem; background: color-mix(in srgb, var(--c) 7%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--c) 25%, var(--line));
+    display: flex; flex-direction: column; gap: .7rem; min-width: 0;
+  }
+  .user-top { display: flex; align-items: center; gap: .7rem; }
+  .agent {
+    width: 46px; height: 46px; border-radius: 50%; flex: none; position: relative;
+    background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--c) 55%, #fff), var(--c));
+    box-shadow: 0 6px 16px -6px var(--c);
+  }
+  .agent::before, .agent::after {
+    content: ""; position: absolute; top: 17px; width: 8px; height: 10px; border-radius: 50%; background: #fff;
+    box-shadow: inset 2px 1px 0 2px #1d1b3a;
+  }
+  .agent::before { left: 12px; } .agent::after { right: 12px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .agent::before, .agent::after { animation: blink 4.2s infinite; }
+    .agent.absorb { animation: absorb .6s ease; }
+    @keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+    @keyframes absorb { 40% { transform: scale(1.18); box-shadow: 0 0 0 10px color-mix(in srgb, var(--c) 25%, transparent); } }
+  }
+  .who b { display: block; font-family: var(--display); font-size: 1.05rem; line-height: 1.2; }
+  .who span { font-size: .82rem; color: var(--muted); }
+  .label { font-size: .78rem; font-weight: 700; color: var(--muted); margin: 0 0 .3rem; }
+  .history { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; min-height: 7.6rem; align-content: start; }
+  .history li {
+    display: flex; align-items: center; gap: .45rem; font-size: .86rem; line-height: 1.3;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: .3rem .55rem;
+  }
+  .history li.new { animation: slidein .45s ease; }
+  @keyframes slidein { from { opacity: 0; transform: translateX(-14px); } }
+  @media (prefers-reduced-motion: reduce) { .history li.new { animation: none; } }
+  .history .more { background: none; border: none; color: var(--muted); font-size: .8rem; padding: 0 .2rem; }
+  .bars { display: grid; gap: .3rem; min-height: 4.4rem; align-content: start; }
+  .bar { display: grid; grid-template-columns: 6.3rem 1fr 2.3rem; align-items: center; gap: .4rem; font-size: .8rem; }
+  .bar .track { height: 8px; border-radius: 99px; background: color-mix(in srgb, var(--c) 14%, var(--surface-2)); overflow: hidden; }
+  .bar .fill { display: block; height: 100%; border-radius: 99px; background: var(--c); width: 0; transition: width .6s ease; }
+  .bar .pct { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bubble {
+    position: relative; background: var(--ink); color: var(--bg); border-radius: 16px; padding: .7rem .85rem;
+    font-size: .92rem; line-height: 1.45; min-height: 5.6rem;
+  }
+  .bubble::before { content: ""; position: absolute; top: -7px; left: 22px; width: 14px; height: 14px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; }
+  .bubble .because { display: block; margin-top: .45rem; font-size: .78rem; opacity: .7; }
+  .typing i { display: inline-block; width: 6px; height: 6px; margin-right: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
+  @media (prefers-reduced-motion: no-preference) {
+    .typing i { animation: dot 1s infinite; } .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes dot { 50% { opacity: 1; transform: translateY(-3px); } }
+  }
+  .add { display: flex; flex-wrap: wrap; gap: .3rem; }
+  .add button {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 10px; cursor: pointer;
+    width: 2.15rem; height: 2.15rem; font-size: 1.05rem; line-height: 1; transition: transform .12s, border-color .12s;
+  }
+  .add button:hover { transform: translateY(-2px); border-color: var(--c); }
+  .demo-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: .9rem .25rem 0; font-size: .82rem; color: var(--muted); }
+  .link-btn { background: none; border: none; cursor: pointer; color: var(--violet); font-weight: 600; padding: .2rem 0; text-decoration: underline; text-underline-offset: 3px; }
 
   /* Sections */
-  main { max-width: 68rem; margin: 0 auto; padding: 0 1rem 4rem; }
-  section { padding-top: 4.5rem; scroll-margin-top: 3.5rem; }
-  h2 {
+  main section { padding-top: 4.5rem; scroll-margin-top: 3.5rem; }
+  main h2 {
     font-family: var(--display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.4rem);
     letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 1.5rem;
-    display: flex; align-items: center; gap: .75rem;
   }
-  h2::before { content: ""; width: .9rem; height: .9rem; border-radius: 4px; background: var(--c, var(--violet)); transform: rotate(45deg); flex: none; }
-  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
-  .reveal.shown { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  .intro { max-width: 44rem; margin: -0.5rem 0 1.75rem; color: var(--muted); }
 
-  /* About */
-  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; }
+  .themes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 860px) { .themes { grid-template-columns: 1fr; } }
+  .theme {
+    --c: var(--violet);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 1.4rem;
+    position: relative; overflow: hidden;
+  }
+  .theme::after { content: ""; position: absolute; right: -2.5rem; top: -2.5rem; width: 7rem; height: 7rem; border-radius: 50%; background: var(--c); opacity: .12; }
+  .theme .glyph { width: 2.6rem; height: 2.6rem; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 15%, var(--surface)); color: var(--c); margin-bottom: .9rem; }
+  .theme .glyph svg { width: 1.4rem; height: 1.4rem; }
+  .theme h3 { font-family: var(--display); font-size: 1.25rem; margin: 0 0 .4rem; }
+  .theme p { margin: 0; color: var(--muted); font-size: .98rem; }
+
+  .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; align-items: start; margin-top: 2.5rem; }
+  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } }
   .about-grid p { margin: 0 0 1rem; max-width: 40rem; }
   .facts { display: grid; gap: .75rem; }
-  .fact {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-    padding: 1rem 1.15rem; border-left: 6px solid var(--c);
-  }
+  .fact { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 1rem 1.15rem; border-left: 6px solid var(--c); }
   .fact strong { display: block; font-family: var(--display); font-size: 1.05rem; }
   .fact span { color: var(--muted); font-size: .95rem; }
-  .chips { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 1.25rem 0 0; }
-  .chips li {
-    padding: .4rem .9rem; border-radius: 999px; font-weight: 600; font-size: .9rem;
-    background: color-mix(in srgb, var(--c) 14%, var(--surface));
-    color: color-mix(in srgb, var(--c) 75%, var(--ink));
-    border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
-    transition: transform .15s;
-  }
-  .chips li:hover { transform: translateY(-2px) rotate(-1deg); }
-  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } }
 
-  /* Publications */
   .pubs { display: grid; gap: 1.25rem; list-style: none; padding: 0; margin: 0; }
   .pub {
     position: relative; background: var(--surface); border: 1px solid var(--line);
-    border-radius: 22px; padding: 1.5rem 1.5rem 1.25rem 1.75rem; overflow: hidden;
-    transition: transform .2s, box-shadow .2s;
+    border-radius: 22px; padding: 1.5rem 1.5rem 1.25rem 1.75rem; overflow: hidden; transition: transform .2s, box-shadow .2s;
   }
   .pub::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(var(--c1), var(--c2)); }
   .pub:hover { transform: translateY(-3px); box-shadow: 0 18px 40px -22px color-mix(in srgb, var(--c1) 60%, transparent); }
-  .tag {
-    display: inline-block; font-size: .8rem; font-weight: 600; padding: .15rem .65rem; border-radius: 999px;
-    background: color-mix(in srgb, var(--c1) 14%, var(--surface)); color: color-mix(in srgb, var(--c1) 80%, var(--ink));
-    margin-bottom: .6rem;
-  }
+  .tag { display: inline-block; font-size: .8rem; font-weight: 600; padding: .15rem .65rem; border-radius: 999px; background: color-mix(in srgb, var(--c1) 14%, var(--surface)); color: color-mix(in srgb, var(--c1) 80%, var(--ink)); margin-bottom: .6rem; }
   .pub h3 { font-family: var(--display); font-weight: 700; font-size: 1.25rem; line-height: 1.3; margin: 0 0 .5rem; }
   .pub h3 a { color: var(--ink); text-decoration: none; }
   .pub h3 a:hover { color: var(--c1); }
@@ -188,42 +231,24 @@
   .authors strong { color: var(--ink); }
   .venue { font-size: .95rem; margin: 0; }
   details { margin-top: .9rem; }
-  summary {
-    cursor: pointer; font-weight: 600; font-size: .92rem; color: var(--c1);
-    list-style: none; display: inline-flex; align-items: center; gap: .4rem;
-  }
+  summary { cursor: pointer; font-weight: 600; font-size: .92rem; color: var(--c1); list-style: none; display: inline-flex; align-items: center; gap: .4rem; }
   summary::-webkit-details-marker { display: none; }
   summary::before { content: "+"; display: inline-grid; place-items: center; width: 1.3rem; height: 1.3rem; border-radius: 50%; background: color-mix(in srgb, var(--c1) 14%, var(--surface)); transition: transform .2s; }
   details[open] summary::before { transform: rotate(45deg); }
   details p { margin: .6rem 0 0; color: var(--muted); max-width: 46rem; }
-  .more { margin-top: 1.25rem; }
+  .more-link { margin-top: 1.25rem; }
 
-  /* Journey */
   .journey { position: relative; list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; }
-  .journey::before {
-    content: ""; position: absolute; left: 1.05rem; top: 1rem; bottom: 1rem; width: 4px; border-radius: 4px;
-    background: linear-gradient(var(--violet), var(--teal));
-  }
+  .journey::before { content: ""; position: absolute; left: 1.05rem; top: 1rem; bottom: 1rem; width: 4px; border-radius: 4px; background: linear-gradient(var(--violet), var(--teal)); }
   .stop { position: relative; padding-left: 3.25rem; }
-  .stop::before {
-    content: ""; position: absolute; left: .4rem; top: 1.35rem; width: 1.4rem; height: 1.4rem; border-radius: 50%;
-    background: var(--surface); border: 5px solid var(--c);
-  }
+  .stop::before { content: ""; position: absolute; left: .4rem; top: 1.35rem; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--surface); border: 5px solid var(--c); }
   .stop.now::before { background: var(--c); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 25%, transparent); }
-  @media (prefers-reduced-motion: no-preference) {
-    .stop.now::before { animation: pulse 2.2s ease-in-out infinite; }
-    @keyframes pulse { 50% { box-shadow: 0 0 0 11px color-mix(in srgb, var(--c) 8%, transparent); } }
-  }
   .stop-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.1rem 1.35rem; }
   .when { font-size: .88rem; font-weight: 600; color: var(--c); margin: 0; }
   .what { font-family: var(--display); font-weight: 700; font-size: 1.2rem; margin: .1rem 0; }
   .where { margin: 0; color: var(--muted); }
 
-  footer {
-    margin-top: 5rem; padding: 2.5rem 1rem;
-    background: linear-gradient(110deg, var(--violet), var(--pink) 55%, var(--amber));
-    color: #fff; text-align: center;
-  }
+  footer { margin-top: 5rem; padding: 2.5rem 1rem; background: linear-gradient(110deg, var(--violet), var(--pink) 55%, var(--amber)); color: #fff; text-align: center; }
   footer p { margin: 0 0 .75rem; font-family: var(--display); font-weight: 700; font-size: 1.4rem; }
   footer a { color: #fff; font-weight: 600; margin: 0 .6rem; }
 </style>
@@ -231,24 +256,23 @@
 <body>
 
 <nav aria-label="Main">
-  <div class="nav-inner">
+  <div class="wrap nav-inner">
     <a class="brand" href="#top">Ehsan Tavan</a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#journey">Journey</a></li>
     </ul>
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to dark theme">☾</button>
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch to dark theme">☾</button>
   </div>
 </nav>
 
 <header class="hero" id="top">
-  <canvas id="field" aria-label="Interactive animation of a lifelong learning agent: click to give it a new task" role="img"></canvas>
-  <div class="hero-inner">
-    <div class="hero-card">
+  <div class="wrap hero-grid">
+    <div>
       <h1>Ehsan Tavan</h1>
       <p class="role">PhD researcher in Artificial Intelligence, University of Pisa<span>ATLAS Lab, Adaptive and Physical AI Agents</span></p>
-      <p class="lede">I study how AI systems can keep learning after they are deployed: continual learning, adaptive agents built on large language models, and efficient ways to adapt those models.</p>
+      <p class="lede">I work on AI agents that learn from each person's history: they remember what matters to you, adapt to it over time, and keep what they learned instead of forgetting it.</p>
       <div class="buttons">
         <a class="btn btn-main" href="https://scholar.google.com/citations?user=oY-ufO0AAAAJ&amp;hl=en">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3zm-6.5 9.6V16c0 1.7 2.9 3.5 6.5 3.5s6.5-1.8 6.5-3.5v-3.4L12 16.2l-6.5-3.6z"/></svg>
@@ -261,28 +285,52 @@
         <a class="btn btn-alt" href="#publications">Publications</a>
       </div>
     </div>
-  </div>
-  <div class="hint">
-    <p class="hint-title"><span class="dots" id="dots"></span>Lifelong learning agent</p>
-    <p><b id="taskCount">0</b> tasks learned, <b>0</b> forgotten</p>
-    <p id="agentLog" aria-live="polite">Click anywhere here to give it a new task.</p>
+
+    <div class="demo" aria-labelledby="demoTitle">
+      <div class="demo-head">
+        <h2 id="demoTitle">Same agent, different histories</h2>
+        <p>Edit a history and watch the answer change.</p>
+      </div>
+      <ul class="questions" aria-label="Question asked to both agents">
+        <li><button class="q" type="button" data-q="0" aria-pressed="true">What should I do tonight?</button></li>
+        <li><button class="q" type="button" data-q="1" aria-pressed="false">Recommend something</button></li>
+        <li><button class="q" type="button" data-q="2" aria-pressed="false">Plan my Saturday</button></li>
+      </ul>
+      <div class="users" id="users"></div>
+      <div class="demo-foot">
+        <span>Recent events count a bit more. Older ones are kept, never dropped.</span>
+        <button class="link-btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
   </div>
 </header>
 
-<main>
-  <section id="about" class="reveal" style="--c: var(--teal)">
-    <h2>About</h2>
+<main class="wrap">
+  <section id="research">
+    <h2>Research</h2>
+    <p class="intro">The demo above is a toy version of the question behind my work: how can one model become a different, better assistant for every person, by learning from their history over time?</p>
+    <div class="themes">
+      <article class="theme" style="--c: var(--violet)">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+        <h3>Personalized agents</h3>
+        <p>Agents built on large language models that build a picture of each user from their interaction history and use it to act on their behalf.</p>
+      </article>
+      <article class="theme" style="--c: var(--teal)">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>Continual learning</h3>
+        <p>Learning from a stream of new experiences without forgetting what came before, so an agent keeps getting better the longer you use it.</p>
+      </article>
+      <article class="theme" style="--c: var(--pink)">
+        <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <h3>Efficient adaptation</h3>
+        <p>Parameter-efficient fine-tuning such as LoRA, which makes it affordable to adapt a large model to a single user or a new task.</p>
+      </article>
+    </div>
+
     <div class="about-grid">
       <div>
         <p>I am a PhD student in the Italian National PhD Program in Artificial Intelligence for Society at the University of Pisa, supervised by <a href="https://www.vincenzolomonaco.com/">Prof. Vincenzo Lomonaco</a> in the <a href="https://atlas.vincenzolomonaco.com/">ATLAS Lab</a>.</p>
         <p>Before starting my PhD, I spent five and a half years as a machine learning and NLP researcher at Part AI Research Center in Tehran, building and adapting language models for real applications.</p>
-        <ul class="chips" aria-label="Research interests">
-          <li style="--c: var(--violet)">Continual learning</li>
-          <li style="--c: var(--pink)">AI agents</li>
-          <li style="--c: var(--sky)">Large language models</li>
-          <li style="--c: var(--amber)">Parameter-efficient fine-tuning</li>
-          <li style="--c: var(--teal)">Natural language processing</li>
-        </ul>
       </div>
       <div class="facts">
         <div class="fact" style="--c: var(--violet)"><strong>PhD in AI</strong><span>University of Pisa, since November 2025</span></div>
@@ -292,7 +340,7 @@
     </div>
   </section>
 
-  <section id="publications" class="reveal" style="--c: var(--pink)">
+  <section id="publications">
     <h2>Publications</h2>
     <ol class="pubs" reversed>
       <li class="pub" style="--c1: var(--violet); --c2: var(--teal)">
@@ -316,10 +364,10 @@
         </details>
       </li>
     </ol>
-    <p class="more">See the full list on <a href="https://scholar.google.com/citations?user=oY-ufO0AAAAJ&amp;hl=en&amp;view_op=list_works&amp;sortby=pubdate">Google Scholar</a>.</p>
+    <p class="more-link">See the full list on <a href="https://scholar.google.com/citations?user=oY-ufO0AAAAJ&amp;hl=en&amp;view_op=list_works&amp;sortby=pubdate">Google Scholar</a>.</p>
   </section>
 
-  <section id="journey" class="reveal" style="--c: var(--amber)">
+  <section id="journey">
     <h2>Journey</h2>
     <ol class="journey">
       <li class="stop now" style="--c: var(--violet)">
@@ -348,27 +396,21 @@
 
 <script>
 (() => {
-  /* Theme toggle: light by default, choice remembered per visitor */
-  const root = document.documentElement, btn = document.getElementById('themeBtn');
+  /* Theme: light by default, the visitor's choice is remembered */
+  const root = document.documentElement, themeBtn = document.getElementById('themeBtn');
   const setTheme = t => {
     root.dataset.theme = t;
-    btn.textContent = t === 'dark' ? '☀' : '☾';
-    btn.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    themeBtn.textContent = t === 'dark' ? '☀' : '☾';
+    themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   };
   let saved = 'light';
   try { saved = localStorage.getItem('theme') || 'light'; } catch (e) {}
   setTheme(saved);
-  btn.addEventListener('click', () => {
+  themeBtn.addEventListener('click', () => {
     const t = root.dataset.theme === 'dark' ? 'light' : 'dark';
     setTheme(t);
     try { localStorage.setItem('theme', t); } catch (e) {}
   });
-
-  /* Reveal sections once as they scroll into view */
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('shown'); io.unobserve(e.target); }
-  }), { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   /* Highlight the current section in the nav */
   const links = [...document.querySelectorAll('.nav-links a')];
@@ -377,165 +419,140 @@
   }), { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main section').forEach(s => spy.observe(s));
 
-  /* Hero: a lifelong-learning agent. It walks to each task, absorbs it, and
-     adds a memory ring. Rings are never removed: nothing is forgotten.
-     Visitors click to hand it a new task. */
-  const canvas = document.getElementById('field'), ctx = canvas.getContext('2d');
+  /* ---------- Demo: same agent, different histories ---------- */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const palette = ['#6c4cf1', '#0aa39c', '#f0457f', '#f5a524', '#2f8cf0', '#9b5de5', '#00b26b', '#ff7a45'];
-  const names = ['Summarize papers', 'Translate', 'Your writing style', 'Answer questions', 'Plan a route', 'Your daily schedule', 'Write code', 'Read charts', 'Your favorite topics', 'Recognize speech', 'Explain a concept', 'Your preferred tone'];
-  const countEl = document.getElementById('taskCount'), logEl = document.getElementById('agentLog'), dotsEl = document.getElementById('dots');
-  let W = 0, H = 0, dpr = 1, nameIdx = 0, colorIdx = 0;
-  let agent, tokens = [], sparks = [], learned = [], trail = [], lastSpawn = 0, wanderAt = 0;
+  const CATS = {
+    fitness:  { e: '🏋️', label: 'Fitness',   ev: 'Went to the gym' },
+    cooking:  { e: '🍝', label: 'Cooking',   ev: 'Saved a pasta recipe' },
+    travel:   { e: '✈️', label: 'Travel',    ev: 'Booked a trip to Lisbon' },
+    research: { e: '📄', label: 'Research',  ev: 'Read a paper on LoRA' },
+    coding:   { e: '💻', label: 'Coding',    ev: 'Pushed code at 11 pm' },
+    deadline: { e: '⏰', label: 'Deadlines', ev: 'Deadline on Friday' },
+    music:    { e: '🎵', label: 'Music',     ev: 'Played a jazz playlist' },
+    reading:  { e: '📚', label: 'Reading',   ev: 'Finished a novel' },
+    football: { e: '⚽', label: 'Football',  ev: 'Watched the Pisa match' }
+  };
+  const ANSWERS = {
+    fitness:  ['A 30-minute mobility session, then an early night. You trained hard this week.', 'A new running route along the Arno, about 5 km.', 'Morning run by the river, then a long lazy lunch.'],
+    cooking:  ['Try that pasta recipe you saved. It takes 25 minutes.', 'A cookbook on simple Italian home cooking.', 'Market in the morning, then cook something new for friends.'],
+    travel:   ['Pack for Lisbon and download offline maps of Alfama.', 'A short guide to the best viewpoints in Lisbon.', 'A day trip to Lucca by train. It is 30 minutes away.'],
+    research: ['Spend 40 minutes on the related-work section, then stop.', 'A recent paper on memory for LLM agents.', 'Two focused hours of reading, then a walk to reset.'],
+    coding:   ['Fix the failing test from last night, then log off before 11.', 'A talk on writing cleaner research code.', 'Refactor in the morning, no laptop after lunch.'],
+    deadline: ['Write the hardest page first. Friday is close.', 'A Pomodoro timer and a quiet library slot.', 'Half a day on the draft, half a day off. You need the rest.'],
+    music:    ['There is a jazz night at a small club nearby at 9.', 'A new jazz album similar to your playlist.', 'Vinyl shopping in the afternoon, live music at night.'],
+    reading:  ['Start the next novel by the same author.', 'A novel similar to the one you just finished.', 'A slow morning with a book at a café by the river.'],
+    football: ['Watch the highlights, then the next match preview.', 'A podcast on Serie B tactics.', 'Five-a-side with friends, then watch Pisa play.']
+  };
+  const users = [
+    { name: 'Sara', note: 'Loves food and travel', color: 'var(--teal)', start: ['travel', 'cooking', 'fitness', 'cooking'] },
+    { name: 'Marco', note: 'PhD student', color: 'var(--violet)', start: ['coding', 'research', 'deadline', 'research'] }
+  ];
+  let q = 0, autoRotate = true, timers = [];
+  const usersEl = document.getElementById('users');
 
-  const area = () => W <= 1100
-    ? { x0: 24, x1: W - 24, y0: 40, y1: 165 }
-    : { x0: Math.max(W * 0.56, 640), x1: W - 40, y0: 50, y1: H - 70 };
-  const rand = (a, b) => a + Math.random() * (b - a);
-
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const r = canvas.getBoundingClientRect();
-    W = r.width; H = r.height;
-    canvas.width = W * dpr; canvas.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  function addToken(x, y) {
-    const a = area();
-    tokens.push({
-      x: x ?? rand(a.x0 + 60, a.x1 - 60), y: y ?? rand(a.y0 + 10, a.y1 - 10),
-      name: names[nameIdx++ % names.length], color: palette[colorIdx++ % palette.length],
-      born: performance.now(), state: 'idle', t: 0
+  users.forEach(u => {
+    u.history = [];
+    const el = document.createElement('article');
+    el.className = 'user'; el.style.setProperty('--c', u.color);
+    el.innerHTML =
+      '<div class="user-top"><div class="agent" aria-hidden="true"></div><div class="who"><b>' + u.name + '\'s agent</b><span>' + u.note + '</span></div></div>' +
+      '<div><p class="label">History</p><ul class="history"></ul></div>' +
+      '<div><p class="label">What it has learned</p><div class="bars"></div></div>' +
+      '<div class="bubble" aria-live="polite"></div>' +
+      '<div><p class="label">Add to ' + u.name + '\'s history</p><div class="add"></div></div>';
+    usersEl.appendChild(el);
+    u.agentEl = el.querySelector('.agent'); u.histEl = el.querySelector('.history');
+    u.barsEl = el.querySelector('.bars'); u.bubbleEl = el.querySelector('.bubble');
+    const add = el.querySelector('.add');
+    Object.entries(CATS).forEach(([k, c]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = c.e; b.title = c.ev;
+      b.setAttribute('aria-label', 'Add "' + c.ev + '" to ' + u.name + "'s history");
+      b.addEventListener('click', () => { autoRotate = false; pushEvent(u, k, true); });
+      add.appendChild(b);
     });
-  }
-  function learn(tok) {
-    learned.push(tok);
-    countEl.textContent = learned.length;
-    logEl.textContent = 'Learned "' + tok.name + '". Still remembers all ' + learned.length + '.';
-    const dot = document.createElement('i'); dot.style.background = tok.color; dotsEl.appendChild(dot);
-    if (dotsEl.children.length > 8) dotsEl.firstChild.remove();
-  }
-  function seed() {
-    const a = area();
-    agent = { x: (a.x0 + a.x1) / 2, y: (a.y0 + a.y1) / 2, vx: 0, vy: 0, tx: 0, ty: 0, target: null };
-    tokens = []; sparks = []; learned = []; trail = []; nameIdx = 0; colorIdx = 0; dotsEl.innerHTML = '';
-    countEl.textContent = '0'; logEl.textContent = 'Click anywhere here to give it a new task.';
-    for (let i = 0; i < 3; i++) addToken();
-  }
+  });
 
-  function roundRect(x, y, w, h, r) {
-    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  /* Preference profile: every event counts; newer ones weigh a little more, none are dropped */
+  function profile(u) {
+    const n = u.history.length, score = {};
+    u.history.forEach((k, i) => { score[k] = (score[k] || 0) + 0.6 + 0.4 * (i + 1) / n; });
+    const total = Object.values(score).reduce((a, b) => a + b, 0) || 1;
+    return Object.entries(score).map(([k, v]) => ({ k, p: v / total })).sort((a, b) => b.p - a.p);
   }
-  function drawToken(tok, now) {
-    const fade = tok.state === 'absorbing' ? 1 - tok.t : Math.min(1, (now - tok.born) / 400);
-    const bob = reduce ? 0 : Math.sin(now / 500 + tok.born) * 3;
-    ctx.save(); ctx.globalAlpha = Math.max(0, fade);
-    ctx.font = '600 12.5px Figtree, system-ui, sans-serif';
-    const w = ctx.measureText(tok.name).width + 30, h = 26, x = tok.x - w / 2, y = tok.y - h / 2 + bob;
-    ctx.shadowColor = tok.color + '55'; ctx.shadowBlur = 14;
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#fff';
-    roundRect(x, y, w, h, 13); ctx.fill();
-    ctx.shadowBlur = 0; ctx.strokeStyle = tok.color; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = tok.color; ctx.beginPath(); ctx.arc(x + 13, y + h / 2, 4, 0, 6.283); ctx.fill();
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#1d1b3a';
-    ctx.textBaseline = 'middle'; ctx.fillText(tok.name, x + 22, y + h / 2 + 0.5);
-    ctx.restore();
-  }
-  function drawAgent(now) {
-    const { x, y } = agent, n = learned.length, step = W <= 700 ? Math.min(3.5, 22 / Math.max(n, 1)) : Math.min(5.5, 46 / Math.max(n, 1)), lw = Math.min(3.5, step * 0.7);
-    /* trail */
-    for (let i = 1; i < trail.length; i++) {
-      ctx.globalAlpha = i / trail.length * 0.35; ctx.strokeStyle = '#8a84b8'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(trail[i - 1][0], trail[i - 1][1]); ctx.lineTo(trail[i][0], trail[i][1]); ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    /* memory rings: one per learned task, oldest innermost, never removed */
-    learned.forEach((tok, i) => {
-      const r = 26 + i * step, rot = (reduce ? 0 : now / (1600 + i * 300)) * (i % 2 ? -1 : 1);
-      ctx.strokeStyle = tok.color; ctx.lineWidth = lw; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.arc(x, y, r, rot, rot + Math.PI * 2 - 0.5); ctx.stroke();
+  function renderHistory(u, fresh) {
+    u.histEl.innerHTML = '';
+    u.history.slice(-4).reverse().forEach((k, i) => {
+      const li = document.createElement('li');
+      if (fresh && i === 0) li.className = 'new';
+      li.innerHTML = '<span aria-hidden="true">' + CATS[k].e + '</span>' + CATS[k].ev;
+      u.histEl.appendChild(li);
     });
-    /* body */
-    const g = ctx.createLinearGradient(x - 20, y - 20, x + 20, y + 20);
-    g.addColorStop(0, '#6c4cf1'); g.addColorStop(1, '#f0457f');
-    ctx.shadowColor = '#6c4cf180'; ctx.shadowBlur = 18;
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 20, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
-    /* antenna */
-    ctx.strokeStyle = '#6c4cf1'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x, y - 20); ctx.lineTo(x, y - 29); ctx.stroke();
-    ctx.fillStyle = learned.length ? learned[learned.length - 1].color : '#f5a524';
-    ctx.beginPath(); ctx.arc(x, y - 31, 3.5, 0, 6.283); ctx.fill();
-    /* eyes look toward the current target */
-    const look = agent.target ? Math.atan2(agent.target.y - y, agent.target.x - x) : 0;
-    const blink = !reduce && (now % 3800) < 120 ? 0.15 : 1;
-    for (const s of [-1, 1]) {
-      const ex = x + s * 7, ey = y - 3;
-      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(ex, ey, 5, 6 * blink, 0, 0, 6.283); ctx.fill();
-      ctx.fillStyle = '#1d1b3a'; ctx.beginPath(); ctx.arc(ex + Math.cos(look) * 2, ey + Math.sin(look) * 2 * blink, 2.4 * blink, 0, 6.283); ctx.fill();
+    if (u.history.length > 4) {
+      const li = document.createElement('li'); li.className = 'more';
+      li.textContent = '+ ' + (u.history.length - 4) + ' earlier, still remembered';
+      u.histEl.appendChild(li);
     }
   }
-
-  function update(now) {
-    const a = area();
-    if (!agent.target || agent.target.state !== 'idle') {
-      let best = null, bd = Infinity;
-      for (const t of tokens) if (t.state === 'idle') { const d = Math.hypot(t.x - agent.x, t.y - agent.y); if (d < bd) { bd = d; best = t; } }
-      agent.target = best;
-    }
-    let tx, ty;
-    if (agent.target) { tx = agent.target.x; ty = agent.target.y; }
-    else {
-      if (now > wanderAt) { agent.tx = rand(a.x0 + 40, a.x1 - 40); agent.ty = rand(a.y0 + 20, a.y1 - 20); wanderAt = now + 2500; }
-      tx = agent.tx; ty = agent.ty;
-    }
-    const dx = tx - agent.x, dy = ty - agent.y, d = Math.hypot(dx, dy) || 1, speed = agent.target ? 2.4 : 0.9;
-    agent.vx += (dx / d * speed - agent.vx) * 0.08; agent.vy += (dy / d * speed - agent.vy) * 0.08;
-    agent.x += agent.vx; agent.y += agent.vy;
-    trail.push([agent.x, agent.y]); if (trail.length > 45) trail.shift();
-
-    if (agent.target && d < 30) {
-      const tok = agent.target; tok.state = 'absorbing';
-      for (let i = 0; i < 22; i++) sparks.push({ x: tok.x + rand(-30, 30), y: tok.y + rand(-10, 10), color: tok.color, life: 1 });
-      agent.target = null;
-    }
-    for (const tok of tokens) if (tok.state === 'absorbing') { tok.t += 0.04; if (tok.t >= 1) { tok.state = 'done'; learn(tok); } }
-    tokens = tokens.filter(t => t.state !== 'done');
-    for (const s of sparks) { s.x += (agent.x - s.x) * 0.12; s.y += (agent.y - s.y) * 0.12; s.life -= 0.035; }
-    sparks = sparks.filter(s => s.life > 0);
-    if (tokens.filter(t => t.state === 'idle').length < 2 && now - lastSpawn > 3200) { addToken(); lastSpawn = now; }
+  function renderBars(u) {
+    u.barsEl.innerHTML = profile(u).slice(0, 3).map(t =>
+      '<div class="bar"><span>' + CATS[t.k].e + ' ' + CATS[t.k].label + '</span><span class="track"><span class="fill" data-w="' + Math.round(t.p * 100) + '"></span></span><span class="pct">' + Math.round(t.p * 100) + '%</span></div>'
+    ).join('');
+    requestAnimationFrame(() => requestAnimationFrame(() => u.barsEl.querySelectorAll('.fill').forEach(f => { f.style.width = f.dataset.w + '%'; })));
   }
-  function draw(now) {
-    ctx.clearRect(0, 0, W, H);
-    for (const tok of tokens) drawToken(tok, now);
-    for (const s of sparks) { ctx.globalAlpha = s.life; ctx.fillStyle = s.color; ctx.beginPath(); ctx.arc(s.x, s.y, 2.5, 0, 6.283); ctx.fill(); }
-    ctx.globalAlpha = 1;
-    drawAgent(now);
+  function addBecause(u, because) {
+    const s = document.createElement('span'); s.className = 'because'; s.textContent = because; u.bubbleEl.appendChild(s);
   }
-  function loop(now) { update(now); draw(now); requestAnimationFrame(loop); }
-
-  /* reduced motion: no animation; tasks are learned instantly and the scene redraws */
-  function learnInstantly() {
-    for (const tok of tokens.splice(0)) learn(tok);
-    trail = []; draw(performance.now());
+  function answer(u) {
+    const prof = profile(u), token = (u.token = (u.token || 0) + 1);
+    if (!prof.length) { u.bubbleEl.textContent = 'No history yet. Add something below.'; return; }
+    const text = ANSWERS[prof[0].k][q];
+    const counts = {}; u.history.forEach(k => { counts[k] = (counts[k] || 0) + 1; });
+    const because = 'Based on: ' + prof.slice(0, 3).map(t => CATS[t.k].e + (counts[t.k] > 1 ? ' ×' + counts[t.k] : '')).join('   ');
+    if (reduce) { u.bubbleEl.textContent = text; addBecause(u, because); return; }
+    u.bubbleEl.innerHTML = '<span class="typing" aria-label="Thinking"><i></i><i></i><i></i></span>';
+    setTimeout(() => {
+      if (token !== u.token) return;
+      u.bubbleEl.textContent = '';
+      const span = document.createElement('span'); u.bubbleEl.appendChild(span);
+      let i = 0;
+      const tick = () => {
+        if (token !== u.token) return;
+        span.textContent = text.slice(0, ++i);
+        if (i < text.length) setTimeout(tick, 16); else addBecause(u, because);
+      };
+      tick();
+    }, 550);
+  }
+  function pushEvent(u, k, fresh) {
+    u.history.push(k);
+    renderHistory(u, fresh); renderBars(u); answer(u);
+    if (fresh) { u.agentEl.classList.remove('absorb'); void u.agentEl.offsetWidth; u.agentEl.classList.add('absorb'); }
   }
 
-  resize(); seed();
-  if (reduce) { learnInstantly(); addToken(); addToken(); draw(performance.now()); }
-  else requestAnimationFrame(loop);
+  /* Question switcher */
+  const qBtns = [...document.querySelectorAll('.q')];
+  function setQuestion(i) {
+    q = i;
+    qBtns.forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.q === i)));
+    users.forEach(answer);
+  }
+  qBtns.forEach(b => b.addEventListener('click', () => { autoRotate = false; setQuestion(+b.dataset.q); }));
 
-  canvas.addEventListener('click', e => {
-    const r = canvas.getBoundingClientRect();
-    addToken(e.clientX - r.left, e.clientY - r.top); lastSpawn = performance.now();
-    if (reduce) { learnInstantly(); }
-  });
-  let rt; addEventListener('resize', () => {
-    clearTimeout(rt);
-    rt = setTimeout(() => {
-      const oldW = W; resize();
-      if (Math.abs(W - oldW) > 40) seed();
-      if (reduce) draw(performance.now());
-    }, 200);
-  });
+  /* Start: stream each starting history in, one event at a time */
+  function start() {
+    timers.forEach(clearTimeout); timers = [];
+    users.forEach(u => { u.history = []; u.token = (u.token || 0) + 1; u.histEl.innerHTML = ''; u.barsEl.innerHTML = ''; u.bubbleEl.textContent = ''; });
+    if (reduce) { users.forEach(u => { u.history = u.start.slice(); renderHistory(u); renderBars(u); answer(u); }); return; }
+    users.forEach((u, j) => u.start.forEach((k, s) => {
+      timers.push(setTimeout(() => pushEvent(u, k, true), 400 + s * 900 + j * 250));
+    }));
+  }
+  document.getElementById('resetBtn').addEventListener('click', () => { autoRotate = true; q = 0; qBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.q === '0'))); start(); });
+  start();
+
+  /* Gently cycle the question until the visitor interacts */
+  if (!reduce) setInterval(() => { if (autoRotate && document.visibilityState === 'visible') setQuestion((q + 1) % 3); }, 9000);
 })();
 </script>
 </body>
